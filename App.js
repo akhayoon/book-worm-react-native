@@ -3,12 +3,14 @@ import {
   Text,
   View,
   SafeAreaView,
-  TouchableOpacity,
+  StyleSheet,
   TextInput,
   FlatList
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BookComponent from "./components/BookCount";
+import CustomActionButton from "./components/CustomActionButton";
+import colors from './assets/colors';
 
 export default function App() {
   const [totalCount, setTotalCount] = useState(0);
@@ -45,22 +47,14 @@ export default function App() {
         }}>
         <Text>{item}</Text>
       </View>
-
-      <TouchableOpacity onPress={() => markAsRead(item, index)}>
-        <View
-          style={{
-            width: 100,
-            height: 50,
-            backgroundColor: '#a5deba',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+      <CustomActionButton
+        onPress={() => markAsRead(item, index)}
+        style={{backgroundColor: colors.bgSuccess, width: 100}}
+      >
           <Text style={{color: 'white'}}>
             Mark as Read
           </Text>
-        </View>
-      </TouchableOpacity>
+      </CustomActionButton>
     </View>
   );
 
@@ -70,7 +64,7 @@ export default function App() {
       <View
         style={{
           height: 70,
-          borderBottomColor: "#E9E9E9",
+          borderBottomColor: colors.borderColor,
           borderBottomWidth: 0.5,
           alignItems: 'center',
           justifyContent: "center"
@@ -85,23 +79,24 @@ export default function App() {
               style={{
                 flex: 1,
                 width: 50,
-                backgroundColor: "#ececec",
+                backgroundColor: colors.bgTextInput,
                 paddingLeft: 5
               }}
               placeholder="Enter Your Book Name"
-              placeholderTextColor="grey"
+              placeholderTextColor={colors.txtPlaceholder}
               onChangeText={(text) => setTextInputData(text)}
             />
-            <TouchableOpacity onPress={() => addBook(textInputData)}>
-              <View style={{ height: 50, backgroundColor: '#a5deba', width: 50, alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name="md-checkmark" color="white" size={40} />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setAddNewBookVisible(false)}>
-              <View style={{ height: 50, backgroundColor: '#deada5', width: 50, alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name="md-close" color="white" size={40} />
-              </View>
-            </TouchableOpacity>
+            <CustomActionButton
+              style={{backgroundColor: colors.bgSuccess}}
+              onPress={() => addBook(textInputData)}
+            >
+              <Ionicons name="md-checkmark" color="white" size={40} />
+            </CustomActionButton>
+            <CustomActionButton 
+              onPress={() => setAddNewBookVisible(false)}
+            >
+              <Ionicons name="md-close" color="white" size={40} />
+            </CustomActionButton>
           </View>
         }
         <FlatList
@@ -114,32 +109,18 @@ export default function App() {
             </View>
           }
         />
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            bottom: 20,
-            right: 20
-          }}
+        <CustomActionButton
+          style={{backgroundColor: colors.bgPrimary, borderRadius: 25}}
+          position="right"
           onPress={() => setAddNewBookVisible(true)}
         >
-          <View
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#AAD1E6",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
             <Text style={{ color: 'white', fontSize: 30 }}>+</Text>
-          </View>
-        </TouchableOpacity>
+        </CustomActionButton>
       </View>
       <View
         style={{
           height: 70,
-          borderBottomColor: "#E9E9E9",
+          borderBottomColor: colors.borderColor,
           borderTopWidth: 0.5,
           alignItems: "center",
           justifyContent: "center",

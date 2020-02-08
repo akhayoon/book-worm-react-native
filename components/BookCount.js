@@ -1,22 +1,27 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import PropTypes from 'prop-types';
+import {Text, View } from "react-native";
 
-export default function BookCount(props) {
-  return (
-    <View style={styles.view}>
-      <Text style={styles.text}>{props.title}</Text>
-      <Text>{props.count}</Text>
-    </View>
-  );
+const BookCount = ({title, count}) => (
+  <View
+    style={{
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
+    <Text style={{fontSize: 20}}>{title}</Text>
+    <Text>{count}</Text>
+  </View>
+);
+
+BookCount.propTypes = {
+  count: PropTypes.number.isRequired,
+  title: PropTypes.string
 }
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  text: {
-    fontSize: 20
-  }
-});
+BookCount.defaultProps = {
+  title: 'Title'
+}
+
+export default BookCount;
