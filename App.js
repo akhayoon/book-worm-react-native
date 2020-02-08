@@ -29,8 +29,10 @@ export default function App() {
   }
 
   markAsRead = (selectedBook, index) => {
-    let newList = books.filter((item, itemIndex) => index !== itemIndex);
-    setReadingCount(readingCount - 1
+    let newList = books.filter(book => book !== selectedBook);
+    setBooks(newList);
+    setReadingCount(readingCount - 1);
+    setReadCount(readCount + 1);
   }
 
   renderItem = (item, index) => (
