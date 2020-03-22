@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 CustomActionButton.propTypes = {
     children: PropTypes.element.isRequired,
     onPress: PropTypes.func.isRequired,
-    style: PropTypes.object,
+    style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     position: PropTypes.string
 }
 
