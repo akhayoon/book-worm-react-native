@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/13.2.0/bin/node /Users/hussienkhayoon/.yarn/bin/yarn.js add expo install react-native-gesture-handler worked for me too...
+  /usr/local/Cellar/node/13.2.0/bin/node /Users/hussienkhayoon/.yarn/bin/yarn.js add eact-native-safe-area-context
 
 PATH: 
   /Users/hussienkhayoon/.yarn/bin:/usr/local/opt/openssl/bin:/Users/hussienkhayoon/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/too...: Not found
+  Error: https://registry.yarnpkg.com/eact-native-safe-area-context: Not found
       at Request.params.callback [as _callback] (/Users/hussienkhayoon/.yarn/lib/cli.js:65656:18)
       at Request.self.callback (/Users/hussienkhayoon/.yarn/lib/cli.js:134675:22)
       at Request.emit (events.js:210:5)
@@ -42,8 +42,10 @@ npm manifest:
       "react": "16.12.0",
       "react-dom": "16.12.0",
       "react-native": "0.61.5",
+      "react-native-gesture-handler": "^1.5.6",
       "react-native-web": "^0.12.0",
-      "react-navigation": "^4.1.1"
+      "react-navigation": "^4.1.1",
+      "react-navigation-stack": "^2.1.1"
     },
     "devDependencies": {
       "babel-preset-expo": "^8.0.0"
@@ -1259,6 +1261,12 @@ Lockfile:
       exec-sh "^0.3.2"
       minimist "^1.2.0"
   
+  "@egjs/hammerjs@^2.0.17":
+    version "2.0.17"
+    resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+    dependencies:
+      "@types/hammerjs" "^2.0.36"
+  
   "@expo/vector-icons@^10.0.2":
     version "10.0.5"
     resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.5.tgz#2464fd262613ad11c9b2d5c4227e85c164fcccf4"
@@ -1444,6 +1452,10 @@ Lockfile:
   "@types/fbemitter@^2.0.32":
     version "2.0.32"
     resolved "https://registry.yarnpkg.com/@types/fbemitter/-/fbemitter-2.0.32.tgz#8ed204da0f54e9c8eaec31b1eec91e25132d082c"
+  
+  "@types/hammerjs@^2.0.36":
+    version "2.0.36"
+    resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.36.tgz#17ce0a235e9ffbcdcdf5095646b374c2bf615a4c"
   
   "@types/invariant@^2.2.29":
     version "2.2.30"
@@ -2020,7 +2032,7 @@ Lockfile:
       map-visit "^1.0.0"
       object-visit "^1.0.0"
   
-  color-convert@^1.9.0:
+  color-convert@^1.9.0, color-convert@^1.9.1:
     version "1.9.3"
     resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
     dependencies:
@@ -2030,9 +2042,27 @@ Lockfile:
     version "1.1.3"
     resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
   
+  color-name@^1.0.0:
+    version "1.1.4"
+    resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
+  
+  color-string@^1.5.2:
+    version "1.5.3"
+    resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.3.tgz#c9bbc5f01b58b5492f3d6857459cb6590ce204cc"
+    dependencies:
+      color-name "^1.0.0"
+      simple-swizzle "^0.2.2"
+  
   color-support@^1.1.3:
     version "1.1.3"
     resolved "https://registry.yarnpkg.com/color-support/-/color-support-1.1.3.tgz#93834379a1cc9a0c61f82f52f0d04322251bd5a2"
+  
+  color@^3.1.2:
+    version "3.1.2"
+    resolved "https://registry.yarnpkg.com/color/-/color-3.1.2.tgz#68148e7f85d41ad7649c5fa8c8106f098d229e10"
+    dependencies:
+      color-convert "^1.9.1"
+      color-string "^1.5.2"
   
   colorette@^1.0.7:
     version "1.1.0"
@@ -2744,6 +2774,12 @@ Lockfile:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   
+  "hammerjs@https://github.com/naver/hammer.js.git":
+    version "2.0.17-snapshot"
+    resolved "https://github.com/naver/hammer.js.git#54bc698b25edd6e1b76ca975ebaced5ce0467d51"
+    dependencies:
+      "@types/hammerjs" "^2.0.36"
+  
   has-flag@^3.0.0:
     version "3.0.0"
     resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
@@ -2901,6 +2937,10 @@ Lockfile:
   is-arrayish@^0.2.1:
     version "0.2.1"
     resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
+  
+  is-arrayish@^0.3.1:
+    version "0.3.2"
+    resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.2.tgz#4574a2ae56f7ab206896fb431eaeed066fdf8f03"
   
   is-buffer@^1.1.5:
     version "1.1.6"
@@ -4121,6 +4161,20 @@ Lockfile:
     version "16.9.0"
     resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
   
+  react-native-gesture-handler@^1.5.6:
+    version "1.5.6"
+    resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.5.6.tgz#5d90145f624e3707db2930f43ab41579683e2375"
+    dependencies:
+      "@egjs/hammerjs" "^2.0.17"
+      hammerjs "https://github.com/naver/hammer.js.git"
+      hoist-non-react-statics "^2.3.1"
+      invariant "^2.2.4"
+      prop-types "^15.7.2"
+  
+  react-native-iphone-x-helper@^1.2.1:
+    version "1.2.1"
+    resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
+  
   react-native-safe-area-view@^0.14.8:
     version "0.14.8"
     resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.8.tgz#ef33c46ff8164ae77acad48c3039ec9c34873e5b"
@@ -4179,6 +4233,13 @@ Lockfile:
       scheduler "0.15.0"
       stacktrace-parser "^0.1.3"
       whatwg-fetch "^3.0.0"
+  
+  react-navigation-stack@^2.1.1:
+    version "2.1.1"
+    resolved "https://registry.yarnpkg.com/react-navigation-stack/-/react-navigation-stack-2.1.1.tgz#0e674f9eb1441fdcd67a792ecc9fb0f9349ed22a"
+    dependencies:
+      color "^3.1.2"
+      react-native-iphone-x-helper "^1.2.1"
   
   react-navigation@^4.1.1:
     version "4.1.1"
@@ -4526,6 +4587,12 @@ Lockfile:
       bplist-creator "0.0.7"
       bplist-parser "0.1.1"
       plist "^3.0.1"
+  
+  simple-swizzle@^0.2.2:
+    version "0.2.2"
+    resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
+    dependencies:
+      is-arrayish "^0.3.1"
   
   slash@^2.0.0:
     version "2.0.0"

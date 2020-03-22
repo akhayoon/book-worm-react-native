@@ -30,7 +30,7 @@ export default class WeclomeScreen extends React.Component{
           >
           <CustomActionButton 
             title="Log In"
-            onPress={() => alert('login')}
+            onPress={() => this.props.navigation.navigate('HomeScreen')}
             style={{
               width: 200,
               backgroundColor: 'transparent',
@@ -43,7 +43,7 @@ export default class WeclomeScreen extends React.Component{
           </CustomActionButton>
           <CustomActionButton
             title="Sign Up"
-            onPress={() => alert('signup')}
+            onPress={() => this.props.navigation.navigate('SignUpScreen')}
             style={{
               width: 200,
               backgroundColor: 'transparent',
