@@ -6,24 +6,37 @@ import {
 } from 'react-native';
 import CustomActionButton from '../components/CustomActionButton';
 import colors from '../assets/colors';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
 
-const SettingsScreen = ({navigation}) => {
-    return (
-        <View style={styles.container}>
-            <CustomActionButton
-                style={{
-                    backgroundColor: 'transparent',
-                    width: 200,
-                    borderWidth: 0.5,
-                    borderColor: colors.bgError
-                }}
-                title="Logout"
-                onPress={() => navigation.navigate('WelcomeScreen')}
-            >
-                <Text style={{color: 'white'}}>Logout</Text>
-            </CustomActionButton>
-        </View>
-    );
+class SettingsScreen extends React.Component {
+    signOut = async() => {
+        try {
+            await firebase.auth().signOut();
+            this.props.navigation.navigate('WelcomeScreen');
+        } catch(error) {
+            alert('Unable to sign out right now');
+        }
+    }
+
+    render() {
+        return (
+            <View style={styles.container}>
+                <CustomActionButton
+                    style={{
+                        backgroundColor: 'transparent',
+                        width: 200,
+                        borderWidth: 0.5,
+                        borderColor: colors.bgError
+                    }}
+                    title="Logout"
+                    onPress={this.signOut}
+                >
+                    <Text style={{color: 'white'}}>Logout</Text>
+                </CustomActionButton>
+            </View>
+        );
+    }
 }
 
 export default SettingsScreen;

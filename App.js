@@ -2,17 +2,32 @@ import React from "react";
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+import * as firebase from 'firebase/app';
 
 import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import LoadingScreen from './screens/LoadingScreen';
 
 import {Ionicons} from '@expo/vector-icons';
 import CustomDrawerComponent from "./screens/DrawNavigator/CustomDrawComponent";
 import colors from "./assets/colors";
+import {firebaseConfig} from './config/config'
 
-const App = () => <AppContainer />
+class App extends React.Component{
+  componentDidMount() {
+    this.initializeFirebase();
+  }
+  initializeFirebase = () => {
+    firebase.initializeApp(firebaseConfig);
+  }
+  render() {
+    return (
+      <AppContainer />
+    )
+  }
+}
 
 const AppDrawerNavigator = createDrawerNavigator({
   HomeScreen: {
@@ -53,6 +68,7 @@ const LoginStackNavigator = createStackNavigator({
 })
 
 const AppSwitchNavigator = createSwitchNavigator({
+  LoadingScreen,
   LoginStackNavigator,
   AppDrawerNavigator
 });
