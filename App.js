@@ -13,7 +13,7 @@ import LoadingScreen from './screens/LoadingScreen';
 import {Ionicons} from '@expo/vector-icons';
 import CustomDrawerComponent from "./screens/DrawNavigator/CustomDrawComponent";
 import colors from "./assets/colors";
-import {firebaseConfig} from './config/config'
+import firebaseConfig from './config/config'
 
 class App extends React.Component{
   componentDidMount() {

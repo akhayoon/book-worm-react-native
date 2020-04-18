@@ -11,26 +11,77 @@ import { Ionicons } from "@expo/vector-icons";
 import BookComponent from "../components/BookCount";
 import CustomActionButton from "../components/CustomActionButton";
 import colors from '../assets/colors';
+import * as firebase from 'firebase/app';
+require("firebase/database");
 
-export default function HomeScreen() {
+
+export default function HomeScreen(props) {
+  const [currentUser, setCurrentUser] = useState({});
   const [totalCount, setTotalCount] = useState(0);
   const [readingCount, setReadingCount] = useState(0);
   const [readCount, setReadCount] = useState(0);
   const [isAddNewBookVisible, setAddNewBookVisible] = useState(false);
   const [textInputData, setTextInputData] = useState('');
   const [books, setBooks] = useState([]);
+  const [booksReading, setBooksReading] = useState([]);
+  const [booksRead, setBooksRead] = useState([]);
 
-  addBook = (book) => {
+  useEffect(() => {
+    const {navigation} = props;
+    const user = navigation.getParam('user');
+
+    firebase.database().ref('users').child(user.uid).once('value').then((currentUserData) => {
+      setCurrentUser(currentUserData.val());
+    })
+  },[])
+
+  addBook = book => {
+    let test = false;
+    firebase
+      .database()
+      .ref('books')
+      .child(currentUser.uid)
+      .orderByChild('name')
+      .equalTo(book)
+      .once('value')
+      .then(result => {
+        if(result.exists()){
+          alert('already exists');
+          return;
+        }
+
+        firebase
+          .database()
+          .ref('books')
+          .child(currentUser.uid)
+          .push()
+          .then((result) => {
+            firebase.database()
+            .ref('books')
+            .child(currentUser.uid)
+            .child(result.key)
+            .set({name: book, read: false})
+          .catch(e => console.log(e))
+        }).catch(e => console.log(e))
+      });
+
+
+
     setBooks([...books, book]);
-    setTotalCount(totalCount + 1);
-    setReadingCount(readingCount + 1);
+    setBooksReading([...booksReading, book])
+    // setTotalCount(totalCount + 1);
+    // setReadingCount(readingCount + 1);
   }
 
   markAsRead = (selectedBook, index) => {
     let newList = books.filter(book => book !== selectedBook);
+    let booksReading = booksReading.filter(book => book !== selectedBook);
     setBooks(newList);
-    setReadingCount(readingCount - 1);
-    setReadCount(readCount + 1);
+    setBooksReading(booksReading);
+
+    setBooksRead(booksRead.concat(selectedBook));
+    // setReadingCount(readingCount - 1);
+    // setReadCount(readCount + 1);
   }
 
   renderItem = (item, index) => (
@@ -123,9 +174,9 @@ export default function HomeScreen() {
           flexDirection: "row"
         }}
       >
-        <BookComponent title="Total" count={totalCount} />
-        <BookComponent title="Reading" count={readingCount} />
-        <BookComponent title="Read" count={readCount} />
+        <BookComponent title="Total Books" count={books.length} />
+        <BookComponent title="Reading" count={booksReading.length} />
+        <BookComponent title="Read" count={booksRead.length} />
       </View>
       <SafeAreaView />
     </View>
