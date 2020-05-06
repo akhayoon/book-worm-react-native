@@ -13,7 +13,7 @@ import CustomActionButton from "../components/CustomActionButton";
 import colors from '../assets/colors';
 import * as firebase from 'firebase/app';
 require("firebase/database");
-
+import {snapshotToArray} from '../helpers/firebaseHelpers';
 
 export default function HomeScreen(props) {
   const [currentUser, setCurrentUser] = useState({});
@@ -30,9 +30,29 @@ export default function HomeScreen(props) {
     const {navigation} = props;
     const user = navigation.getParam('user');
 
-    firebase.database().ref('users').child(user.uid).once('value').then((currentUserData) => {
-      setCurrentUser(currentUserData.val());
-    })
+    firebase
+      .database()
+      .ref('users')
+      .child(user.uid)
+      .once('value')
+      .then((currentUserData) => {
+        setCurrentUser(currentUserData.val());
+        console.log(currentUserData)
+        firebase
+          .database()
+          .ref('books')
+          .child(user.uid)
+          .once('value')
+          .then((books) => {
+            const booksArray = snapshotToArray(books);
+            console.log(booksArray)
+            setBooks(booksArray);
+            setBooksReading(booksArray.filter(b => !b.read));
+            setBooksRead(booksArray.filter(b => b.read))
+          })
+          .catch(err => console.log(err));
+      }).catch(err => console.log(err))
+
   },[])
 
   addBook = book => {
@@ -66,22 +86,22 @@ export default function HomeScreen(props) {
       });
 
 
+    setBooks([...books, {name: book, read: false}]);
+    setBooksReading([...booksReading, {name: book, read: false}])
 
-    setBooks([...books, book]);
-    setBooksReading([...booksReading, book])
-    // setTotalCount(totalCount + 1);
-    // setReadingCount(readingCount + 1);
   }
 
   markAsRead = (selectedBook, index) => {
-    let newList = books.filter(book => book !== selectedBook);
-    let booksReading = booksReading.filter(book => book !== selectedBook);
+    let newList = books.map(book => {
+      if(book.name === selectedBook.name) {
+        return {...book, read: true};
+      }
+      return book;
+    });
     setBooks(newList);
-    setBooksReading(booksReading);
+    setBooksReading(booksReading.filter(book => book.name !== selectedBook.name));
 
-    setBooksRead(booksRead.concat(selectedBook));
-    // setReadingCount(readingCount - 1);
-    // setReadCount(readCount + 1);
+    setBooksRead(booksRead.concat({name: selectedBook.name, read: true}));
   }
 
   renderItem = (item, index) => (
@@ -92,8 +112,11 @@ export default function HomeScreen(props) {
           justifyContent: 'center',
           paddingLeft: 5
         }}>
-        <Text>{item}</Text>
+        <Text>{item.name}</Text>
       </View>
+      {item.read ? (
+        <Ionicons name="md-checkmark" color={colors.logoColor} size={30} />
+      ):(
       <CustomActionButton
         onPress={() => markAsRead(item, index)}
         style={{backgroundColor: colors.bgSuccess, width: 100}}
@@ -102,6 +125,7 @@ export default function HomeScreen(props) {
             Mark as Read
           </Text>
       </CustomActionButton>
+      )}
     </View>
   );
 
