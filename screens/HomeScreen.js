@@ -5,26 +5,28 @@ import {
   SafeAreaView,
   StyleSheet,
   TextInput,
-  FlatList
+  FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as firebase from 'firebase/app';
+import * as Animatable from "react-native-animatable";
+require("firebase/database");
+
+
 import BookComponent from "../components/BookCount";
 import CustomActionButton from "../components/CustomActionButton";
+import ListItem from "../components/ListItem";
 import colors from '../assets/colors';
-import * as firebase from 'firebase/app';
-require("firebase/database");
-import {snapshotToArray} from '../helpers/firebaseHelpers';
+import { snapshotToArray } from '../helpers/firebaseHelpers';
 
 export default function HomeScreen(props) {
   const [currentUser, setCurrentUser] = useState({});
-  const [totalCount, setTotalCount] = useState(0);
-  const [readingCount, setReadingCount] = useState(0);
-  const [readCount, setReadCount] = useState(0);
   const [isAddNewBookVisible, setAddNewBookVisible] = useState(false);
   const [textInputData, setTextInputData] = useState('');
   const [books, setBooks] = useState([]);
   const [booksReading, setBooksReading] = useState([]);
   const [booksRead, setBooksRead] = useState([]);
+  this.textInputRef = React.createRef();
 
   useEffect(() => {
     const {navigation} = props;
@@ -37,7 +39,6 @@ export default function HomeScreen(props) {
       .once('value')
       .then((currentUserData) => {
         setCurrentUser(currentUserData.val());
-        console.log(currentUserData)
         firebase
           .database()
           .ref('books')
@@ -45,7 +46,6 @@ export default function HomeScreen(props) {
           .once('value')
           .then((books) => {
             const booksArray = snapshotToArray(books);
-            console.log(booksArray)
             setBooks(booksArray);
             setBooksReading(booksArray.filter(b => !b.read));
             setBooksRead(booksArray.filter(b => b.read))
@@ -55,8 +55,8 @@ export default function HomeScreen(props) {
 
   },[])
 
-  addBook = book => {
-    let test = false;
+  addBook = () => {
+    const book = textInputData;
     firebase
       .database()
       .ref('books')
@@ -87,50 +87,49 @@ export default function HomeScreen(props) {
 
 
     setBooks([...books, {name: book, read: false}]);
-    setBooksReading([...booksReading, {name: book, read: false}])
+    setBooksReading([...booksReading, {name: book, read: false}]);
 
+    setTextInputData('');
+    this.textInputRef.setNativeProps({text: ''})
   }
 
-  markAsRead = (selectedBook, index) => {
-    let newList = books.map(book => {
-      if(book.name === selectedBook.name) {
-        return {...book, read: true};
-      }
-      return book;
-    });
-    setBooks(newList);
-    setBooksReading(booksReading.filter(book => book.name !== selectedBook.name));
-
-    setBooksRead(booksRead.concat({name: selectedBook.name, read: true}));
+  markAsRead = async(selectedBook, index) => {
+    try{
+      console.log('heller')
+      await firebase.database().ref('books').child(currentUser.uid).child(selectedBook.key).update({read: true});
+      let newList = books.map(book => {
+        if(book.name === selectedBook.name) {
+          return {...book, read: true};
+        }
+        return book;
+      });
+      setBooks(newList);
+      setBooksReading(booksReading.filter(book => book.name !== selectedBook.name));
+      setBooksRead(booksRead.concat({name: selectedBook.name, read: true}));
+    } catch(e) {
+      console.log(e);
+    }
   }
 
-  renderItem = (item, index) => (
-    <View style={{height: 50, flexDirection: 'row'}}>
-      <View 
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          paddingLeft: 5
-        }}>
-        <Text>{item.name}</Text>
-      </View>
+  renderItem = (item, index) => ( 
+    <ListItem item={item} >
       {item.read ? (
         <Ionicons name="md-checkmark" color={colors.logoColor} size={30} />
-      ):(
-      <CustomActionButton
-        onPress={() => markAsRead(item, index)}
-        style={{backgroundColor: colors.bgSuccess, width: 100}}
-      >
-          <Text style={{color: 'white'}}>
-            Mark as Read
-          </Text>
-      </CustomActionButton>
-      )}
-    </View>
+      ) : (
+          <CustomActionButton
+            onPress={() => markAsRead(item, index)}
+            style={{ backgroundColor: colors.bgSuccess, width: 100 }}
+          >
+            <Text style={{ color: 'white' }}>
+              Mark as Read
+            </Text>
+          </CustomActionButton>
+        )}
+    </ListItem>
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.bgMain}}>
       <SafeAreaView />
       <View
         style={{
@@ -144,7 +143,17 @@ export default function HomeScreen(props) {
         <Text style={{ fontSize: 24 }}>Book Worm</Text>
       </View>
       <View style={{ flex: 1 }}>
-        {isAddNewBookVisible && 
+        <View style={styles.textInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter Your Book Name"
+            placeholderTextColor={colors.txtPlaceholder}
+            onChangeText={(text) => setTextInputData(text)}
+            ref={component => this.textInputRef = component}
+          />
+
+        </View>
+        {/* {isAddNewBookVisible && 
           <View style={{ height: 50, flexDirection: 'row' }}>
             <TextInput
               style={{
@@ -169,7 +178,7 @@ export default function HomeScreen(props) {
               <Ionicons name="md-close" color="white" size={40} />
             </CustomActionButton>
           </View>
-        }
+        } */}
         <FlatList
           data={books}
           renderItem={({item}, index) => renderItem(item, index)}
@@ -180,13 +189,20 @@ export default function HomeScreen(props) {
             </View>
           }
         />
-        <CustomActionButton
-          style={{backgroundColor: colors.bgPrimary, borderRadius: 25}}
-          position="right"
-          onPress={() => setAddNewBookVisible(true)}
-        >
+
+        {/* <Animatable.View animation={textInputData.length > 0 ? 'slideInRight' : 'slideOutRight'}> */}
+        {textInputData.length > 0
+          ?
+          <CustomActionButton
+            style={{ backgroundColor: colors.bgPrimary, borderRadius: 25 }}
+            position="right"
+            onPress={addBook}
+          >
             <Text style={{ color: 'white', fontSize: 30 }}>+</Text>
-        </CustomActionButton>
+          </CustomActionButton>
+          : null
+        }
+        {/* </Animatable.View> */}
       </View>
       <View
         style={{
@@ -206,3 +222,21 @@ export default function HomeScreen(props) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textInputContainer: {
+    height: 50,
+    flexDirection: 'row',
+    margin: 5
+  },
+  textInput: {
+    flex: 1,
+    width: 50,
+    fontSize: 22,
+    backgroundColor: 'transparent',
+    borderColor: colors.ListItembg,
+    paddingLeft: 5,
+    borderBottomWidth: 5,
+    color: colors.txtWhite
+  }
+});

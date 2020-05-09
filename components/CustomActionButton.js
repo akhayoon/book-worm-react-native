@@ -9,8 +9,8 @@ import colors from '../assets/colors';
 
 function getPosition(position) {
     return position === 'left' 
-        ? {position: 'absolute', left: 20, bottom: 20}
-        : {position: 'absolute', right: 20, bottom: 20}
+        ? {position: 'absolute', left: 20, bottom: 270}
+        : {position: 'absolute', right: 20, bottom: 270}
 }
 
 const CustomActionButton = ({children, onPress, style, position}) => {
