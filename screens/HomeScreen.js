@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as firebase from 'firebase/app';
 import * as Animatable from "react-native-animatable";
 require("firebase/database");
+import {connect} from 'react-redux';
 
 
 import BookComponent from "../components/BookCount";
@@ -19,13 +20,9 @@ import ListItem from "../components/ListItem";
 import colors from '../assets/colors';
 import { snapshotToArray } from '../helpers/firebaseHelpers';
 
-export default function HomeScreen(props) {
+function HomeScreen(props) {
   const [currentUser, setCurrentUser] = useState({});
-  const [isAddNewBookVisible, setAddNewBookVisible] = useState(false);
   const [textInputData, setTextInputData] = useState('');
-  const [books, setBooks] = useState([]);
-  const [booksReading, setBooksReading] = useState([]);
-  const [booksRead, setBooksRead] = useState([]);
   this.textInputRef = React.createRef();
 
   useEffect(() => {
@@ -46,66 +43,55 @@ export default function HomeScreen(props) {
           .once('value')
           .then((books) => {
             const booksArray = snapshotToArray(books);
-            setBooks(booksArray);
-            setBooksReading(booksArray.filter(b => !b.read));
-            setBooksRead(booksArray.filter(b => b.read))
+            props.loadBooks(booksArray.reverse());
           })
           .catch(err => console.log(err));
       }).catch(err => console.log(err))
 
   },[])
 
-  addBook = () => {
-    const book = textInputData;
-    firebase
-      .database()
-      .ref('books')
-      .child(currentUser.uid)
-      .orderByChild('name')
-      .equalTo(book)
-      .once('value')
-      .then(result => {
-        if(result.exists()){
-          alert('already exists');
-          return;
-        }
+  addBook = async () => {
+    try{
+      const book = textInputData;
+      
+      const snapshot = await firebase
+        .database()
+        .ref('books')
+        .child(currentUser.uid)
+        .orderByChild('name')
+        .equalTo(book)
+        .once('value');
 
-        firebase
-          .database()
-          .ref('books')
-          .child(currentUser.uid)
-          .push()
-          .then((result) => {
-            firebase.database()
-            .ref('books')
-            .child(currentUser.uid)
-            .child(result.key)
-            .set({name: book, read: false})
-          .catch(e => console.log(e))
-        }).catch(e => console.log(e))
-      });
+      if(snapshot.exists()) {
+        alert('already exists');
+        return;
+      }
 
+      const key = await firebase
+        .database()
+        .ref('books')
+        .child(currentUser.uid)
+        .push().key;
+      
+      await firebase.database()
+        .ref('books')
+        .child(currentUser.uid)
+        .child(key)
+        .set({name: book, read: false});
 
-    setBooks([...books, {name: book, read: false}]);
-    setBooksReading([...booksReading, {name: book, read: false}]);
+      props.addBook({name: book, read: false, key});
 
-    setTextInputData('');
-    this.textInputRef.setNativeProps({text: ''})
+      setTextInputData('');
+      this.textInputRef.setNativeProps({text: ''});
+    } catch(e) {
+      console.log(error);
+    }
   }
 
   markAsRead = async(selectedBook, index) => {
     try{
-      console.log('heller')
       await firebase.database().ref('books').child(currentUser.uid).child(selectedBook.key).update({read: true});
-      let newList = books.map(book => {
-        if(book.name === selectedBook.name) {
-          return {...book, read: true};
-        }
-        return book;
-      });
-      setBooks(newList);
-      setBooksReading(booksReading.filter(book => book.name !== selectedBook.name));
-      setBooksRead(booksRead.concat({name: selectedBook.name, read: true}));
+      props.markBookAsRead(selectedBook);
     } catch(e) {
       console.log(e);
     }
@@ -140,36 +126,10 @@ export default function HomeScreen(props) {
             onChangeText={(text) => setTextInputData(text)}
             ref={component => this.textInputRef = component}
           />
-
         </View>
-        {/* {isAddNewBookVisible && 
-          <View style={{ height: 50, flexDirection: 'row' }}>
-            <TextInput
-              style={{
-                flex: 1,
-                width: 50,
-                backgroundColor: colors.bgTextInput,
-                paddingLeft: 5
-              }}
-              placeholder="Enter Your Book Name"
-              placeholderTextColor={colors.txtPlaceholder}
-              onChangeText={(text) => setTextInputData(text)}
-            />
-            <CustomActionButton
-              style={{backgroundColor: colors.bgSuccess}}
-              onPress={() => addBook(textInputData)}
-            >
-              <Ionicons name="md-checkmark" color="white" size={40} />
-            </CustomActionButton>
-            <CustomActionButton 
-              onPress={() => setAddNewBookVisible(false)}
-            >
-              <Ionicons name="md-close" color="white" size={40} />
-            </CustomActionButton>
-          </View>
-        } */}
+        
         <FlatList
-          data={books}
+          data={props.books}
           renderItem={({item}, index) => renderItem(item, index)}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
@@ -193,24 +153,26 @@ export default function HomeScreen(props) {
         }
         {/* </Animatable.View> */}
       </View>
-      {/* <View
-        style={{
-          height: 70,
-          borderBottomColor: colors.borderColor,
-          borderTopWidth: 0.5,
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row"
-        }}
-      >
-        <BookComponent title="Total Books" count={books.length} />
-        <BookComponent title="Reading" count={booksReading.length} />
-        <BookComponent title="Read" count={booksRead.length} />
-      </View> */}
       <SafeAreaView />
     </View>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    ...state.books
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadBooks: books => dispatch({type: 'LOAD_BOOKS_FROM_SERVER', payload: books}),
+    markBookAsRead: book => dispatch({type: 'MARK_BOOK_AS_READ', payload: book}),
+    addBook: book => dispatch({type: 'ADD_BOOK', payload: book})
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 
 const styles = StyleSheet.create({
   textInputContainer: {

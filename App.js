@@ -5,6 +5,7 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import * as firebase from 'firebase/app';
 import { Ionicons } from '@expo/vector-icons';
+import {Provider} from 'react-redux';
 
 import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -17,7 +18,7 @@ import CustomDrawerComponent from "./screens/DrawNavigator/CustomDrawComponent";
 import colors from "./assets/colors";
 import firebaseConfig from './config/firebaseConfig'
 import { color } from "react-native-reanimated";
-
+import store from './redux/store'
 
 class App extends React.Component{
   componentDidMount() {
@@ -28,7 +29,9 @@ class App extends React.Component{
   }
   render() {
     return (
-      <AppContainer />
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
     )
   }
 }
