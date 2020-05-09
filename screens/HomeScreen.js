@@ -131,17 +131,6 @@ export default function HomeScreen(props) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bgMain}}>
       <SafeAreaView />
-      <View
-        style={{
-          height: 70,
-          borderBottomColor: colors.borderColor,
-          borderBottomWidth: 0.5,
-          alignItems: 'center',
-          justifyContent: "center"
-        }}
-      >
-        <Text style={{ fontSize: 24 }}>Book Worm</Text>
-      </View>
       <View style={{ flex: 1 }}>
         <View style={styles.textInputContainer}>
           <TextInput
@@ -204,7 +193,7 @@ export default function HomeScreen(props) {
         }
         {/* </Animatable.View> */}
       </View>
-      <View
+      {/* <View
         style={{
           height: 70,
           borderBottomColor: colors.borderColor,
@@ -217,7 +206,7 @@ export default function HomeScreen(props) {
         <BookComponent title="Total Books" count={books.length} />
         <BookComponent title="Reading" count={booksReading.length} />
         <BookComponent title="Read" count={booksRead.length} />
-      </View>
+      </View> */}
       <SafeAreaView />
     </View>
   );
