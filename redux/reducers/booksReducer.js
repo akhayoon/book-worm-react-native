@@ -32,6 +32,18 @@ const books = (state = initialState, action) => {
         booksRead: [...state.booksRead, action.payload],
         booksReading: state.booksReading.filter(b => b.name !== action.payload.name)
       }
+      case 'MARK_BOOK_AS_UNREAD':
+        return {
+          ...state,
+          books: state.books.map(book => {
+            if (book.name === action.payload.name) {
+              return { ...book, read: false }
+            }
+            return book;
+          }),
+          booksRead: state.booksRead.filter(b => b.name !== action.payload.name),
+          booksReading: [...state.booksReading, action.payload]
+        }
     case 'TOGGLE_IS_LOADING_BOOKS':
       return {
         ...state,

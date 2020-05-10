@@ -31,6 +31,7 @@ function HomeScreen(props) {
   const dispatch = useDispatch();
   const loadBooksIntoStore = books => dispatch({type: 'LOAD_BOOKS_FROM_SERVER', payload: books});
   const markAsReadInStore = book => dispatch({type: 'MARK_BOOK_AS_READ', payload: book});
+  const markAsUnreadInStore = book => dispatch({type: 'MARK_BOOK_AS_UNREAD', payload: book});
   const addBookToStore = book => dispatch({type: 'ADD_BOOK', payload: book});
   const toggleIsLoadingBooks = bool => dispatch({type: 'TOGGLE_IS_LOADING_BOOKS', payload: bool})
 
@@ -120,6 +121,18 @@ function HomeScreen(props) {
     }
   }
 
+  markAsUnread = async (selectedBook, index) => {
+    try{
+      toggleIsLoadingBooks(true);
+      await firebase.database().ref('books').child(currentUser.uid).child(selectedBook.key).update({read: false});
+      markAsUnreadInStore(selectedBook);
+      toggleIsLoadingBooks(false);
+    } catch(e) {
+      console.log(e);
+      toggleIsLoadingBooks(false);
+    }
+  }
+
   renderItem = (item, index) => {
     const swipeoutButtons = [
       {
@@ -143,7 +156,7 @@ function HomeScreen(props) {
           </View>
         ),
         backgroundColor: colors.bgSuccessDark,
-        onPress: () => alert('mark read')
+        onPress: () =>  markAsRead(item, index)
       })
     } else {
       swipeoutButtons.unshift({
@@ -154,7 +167,7 @@ function HomeScreen(props) {
           </View>
         ),
         backgroundColor: colors.bgUnread,
-        onPress: () => alert('mkar unread')
+        onPress: () => markAsUnread(item, index)
       })
     }
     return (
@@ -165,18 +178,9 @@ function HomeScreen(props) {
         autoClose={true}
         >
         <ListItem item={item} marginVertical={0}>
-          {item.read ? (
+          {item.read && (
             <Ionicons name="md-checkmark" color={colors.logoColor} size={30} />
-          ) : (
-              <CustomActionButton
-                onPress={() => markAsRead(item, index)}
-                style={{ backgroundColor: colors.bgSuccess, width: 100 }}
-              >
-                <Text style={{ color: colors.txtWhite }}>
-                  Mark as Read
-              </Text>
-              </CustomActionButton>
-            )}
+          )}
         </ListItem>
       </Swipeout>
     );
