@@ -17,8 +17,8 @@ import BooksReadScreen from './screens/HomeTabNavigator/BooksReadScreen';
 import CustomDrawerComponent from "./screens/DrawNavigator/CustomDrawComponent";
 import colors from "./assets/colors";
 import firebaseConfig from './config/firebaseConfig'
-import { color } from "react-native-reanimated";
-import store from './redux/store'
+import store from './redux/store';
+import BooksCountContainer from './redux/containers/BooksCountContainer';
 
 class App extends React.Component{
   componentDidMount() {
@@ -40,19 +40,22 @@ const HomeTabNavigator = createBottomTabNavigator({
   HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
-      tabBarLabel: 'Total Books'
+      tabBarLabel: 'Total Books',
+      tabBarIcon: ({tintColor}) => <BooksCountContainer type="books" color={tintColor} />
     }
   },
   BooksReadingScreen: {
     screen: BooksReadingScreen,
     navigationOptions: {
-      tabBarLabel: 'Books Reading'
+      tabBarLabel: 'Books Reading',
+      tabBarIcon: ({tintColor}) => <BooksCountContainer type="booksReading"  color={tintColor} />
     }
   },
   BooksReadScreen: {
     screen: BooksReadScreen,
     navigationOptions: {
-      tabBarLabel: 'Books Read'
+      tabBarLabel: 'Books Read',
+      tabBarIcon: ({tintColor}) => <BooksCountContainer type="booksRead" color={tintColor} />
     }
   },
 }, {
@@ -70,7 +73,7 @@ HomeTabNavigator.navigationOptions = ({navigation}) => {
   switch (routeName) {
     case 'HomeScreen':
       return {
-        headerTitle: 'Total Books'
+        headerTitle: 'Total Books',
       }
     case 'BooksReadingScreen':
       return {

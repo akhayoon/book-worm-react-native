@@ -7,9 +7,9 @@ import {
 } from "react-native";
 import colors from '../assets/colors'
 
-const ListItem = ({item, children}) => {
+const ListItem = ({item, children, marginVertical}) => {
   return (
-    <View style={styles.listItemContainer}>
+    <View style={[styles.listItemContainer, marginVertical]}>
       <View
         style={styles.imageContainer}>
         <Image source={require('../assets/icon.png')} style={styles.image} />
@@ -25,6 +25,9 @@ const ListItem = ({item, children}) => {
 
 export default ListItem;
 
+ListItem.defaultProps = {
+  marginVertical: 5
+}
 
 const styles = StyleSheet.create({
   listItemContainer: {
@@ -32,7 +35,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.ListItembg,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5
   },
   imageContainer: {
     height: 70,

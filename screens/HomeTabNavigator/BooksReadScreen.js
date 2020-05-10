@@ -3,10 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import colors from '../../assets/colors';
 import ListItem from '../../components/ListItem';
@@ -15,6 +16,7 @@ import ListEmptyComponent from '../../components/ListItem';
 
 const BooksReadScreen = ({ item, children }) => {
   const booksRead = useSelector(state => state.books.booksRead);
+  const isLoadingBooks = useSelector(state => state.books.isLoadingBooks);
 
   renderItem = (item, index) => (
     <ListItem item={item} >
@@ -35,11 +37,23 @@ const BooksReadScreen = ({ item, children }) => {
 
   return (
     <View style={styles.container}>
+      {isLoadingBooks && (
+        <View
+          style={{
+            ...StyleSheet.absoluteFill,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            elevation: 1000
+          }}>
+          <ActivityIndicator size="large" color={colors.logoColor} />
+        </View>
+      )}
       <FlatList
         data={booksRead}
         renderItem={({ item }, index) => renderItem(item, index)}
         keyExtractor={(item, index) => index.toString()}
-        ListEmptyComponent={<ListEmptyComponent text="No books read" />}      />
+        ListEmptyComponent={!isLoadingBooks && <ListEmptyComponent text="No books read" />}      />
     </View>
   );
 }
