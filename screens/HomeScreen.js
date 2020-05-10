@@ -14,8 +14,8 @@ require("firebase/database");
 import {connect} from 'react-redux';
 
 
-import BookComponent from "../components/BookCount";
 import CustomActionButton from "../components/CustomActionButton";
+import ListEmptyComponent from "../components/ListEmptyComponent";
 import ListItem from "../components/ListItem";
 import colors from '../assets/colors';
 import { snapshotToArray } from '../helpers/firebaseHelpers';
@@ -132,11 +132,7 @@ function HomeScreen(props) {
           data={props.books}
           renderItem={({item}, index) => renderItem(item, index)}
           keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={
-            <View style={{marginTop: 50}}>
-              <Text style={{fontWeight: 'bold'}}> Not reading any books</Text>
-            </View>
-          }
+          ListEmptyComponent={<ListEmptyComponent text="No books" />}
         />
 
         {/* <Animatable.View animation={textInputData.length > 0 ? 'slideInRight' : 'slideOutRight'}> */}

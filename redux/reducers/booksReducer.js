@@ -10,8 +10,8 @@ const books = (state = initialState, action) => {
       return {
         ...state,
         books: action.payload,
-        booksReading: action.payload.filter(b => !books.read),
-        booksRead: action.payload.filter(b => books.read)
+        booksReading: action.payload.filter(b => !b.read),
+        booksRead: action.payload.filter(b => b.read)
       }
     case 'ADD_BOOK':
       return {
