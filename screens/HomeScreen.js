@@ -33,17 +33,17 @@ function HomeScreen(props) {
   const markAsReadInStore = book => dispatch({type: 'MARK_BOOK_AS_READ', payload: book});
   const markAsUnreadInStore = book => dispatch({type: 'MARK_BOOK_AS_UNREAD', payload: book});
   const addBookToStore = book => dispatch({type: 'ADD_BOOK', payload: book});
-  const toggleIsLoadingBooks = bool => dispatch({type: 'TOGGLE_IS_LOADING_BOOKS', payload: bool})
+  const deleteBookInStore = book => dispatch({type: 'DELETE_BOOK', payload: book});
+  const toggleIsLoadingBooks = bool => dispatch({type: 'TOGGLE_IS_LOADING_BOOKS', payload: bool});
 
   useEffect(() => {
     const {navigation} = props;
     const user = navigation.getParam('user');
     loadBooks(user);
-
   },[])
 
   loadBooks = async (user) => {
-    try{
+    try {
       toggleIsLoadingBooks(true);
       const currentUserData = await firebase
         .database()
@@ -59,11 +59,11 @@ function HomeScreen(props) {
         .child(user.uid)
         .once('value');
 
-        const booksArray = snapshotToArray(booksFromServer);
-        loadBooksIntoStore(booksArray.reverse());
-        toggleIsLoadingBooks(false);
-      
-    } catch(e) {
+      const booksArray = snapshotToArray(booksFromServer);
+      loadBooksIntoStore(booksArray.reverse());
+      toggleIsLoadingBooks(false);
+
+    } catch (e) {
       console.log(e);
       toggleIsLoadingBooks(false);
     }
@@ -133,6 +133,18 @@ function HomeScreen(props) {
     }
   }
 
+  deleteBook = async (selectedBook, index) => {
+    try{
+      toggleIsLoadingBooks(true);
+      await firebase.database().ref('books').child(currentUser.uid).child(selectedBook.key).remove();
+      deleteBookInStore(selectedBook);
+      toggleIsLoadingBooks(false);
+    } catch(e) {
+      console.log(e);
+      toggleIsLoadingBooks(false);
+    }
+  }
+
   renderItem = (item, index) => {
     const swipeoutButtons = [
       {
@@ -143,7 +155,7 @@ function HomeScreen(props) {
           </View>
         ),
         backgroundColor: colors.bgDelete,
-        onPress: () => alert('delete book')
+        onPress: () => deleteBook(item, index)
       }
     ];
 
@@ -152,18 +164,18 @@ function HomeScreen(props) {
         text: 'Mark Read',
         component: (
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{color: colors.txtWhite}}>Mark as Read</Text>
+            <Text style={{color: colors.txtWhite, textAlign: 'center'}}>Mark as Read</Text>
           </View>
         ),
         backgroundColor: colors.bgSuccessDark,
-        onPress: () =>  markAsRead(item, index)
+        onPress: () => markAsRead(item, index)
       })
     } else {
       swipeoutButtons.unshift({
         text: 'Mark Unread',
         component: (
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text style={{color: colors.txtWhite}}>Mark Unread</Text>
+            <Text style={{color: colors.txtWhite, textAlign: 'center'}}>Mark Unread</Text>
           </View>
         ),
         backgroundColor: colors.bgUnread,
@@ -179,7 +191,12 @@ function HomeScreen(props) {
         >
         <ListItem item={item} marginVertical={0}>
           {item.read && (
-            <Ionicons name="md-checkmark" color={colors.logoColor} size={30} />
+            <Ionicons
+              style={{maginRight: 5}}
+              name="md-checkmark"
+              color={colors.logoColor}
+              size={30} 
+            />
           )}
         </ListItem>
       </Swipeout>

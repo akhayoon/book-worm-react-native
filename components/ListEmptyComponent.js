@@ -17,7 +17,7 @@ const ListEmptyComponent = ({ text }) => {
 
 export default ListEmptyComponent;
 
-ListEmptyComponent.PropTypes = {
+ListEmptyComponent.propTypes = {
   text: PropTypes.string.isRequired
 }
 
