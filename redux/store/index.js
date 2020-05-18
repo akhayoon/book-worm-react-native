@@ -1,8 +1,10 @@
 import {createStore, combineReducers} from 'redux';
 import booksReducer from '../reducers/booksReducer';
+import authReducer from '../reducers/authReducer';
 
 const store = createStore(combineReducers({
-  books: booksReducer
+  books: booksReducer,
+  auth: authReducer
 }));
 
 export default store;

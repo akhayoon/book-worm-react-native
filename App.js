@@ -8,6 +8,12 @@ import { Ionicons } from '@expo/vector-icons';
 import {Provider} from 'react-redux';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
+import colors from "./assets/colors";
+import firebaseConfig from './config/firebaseConfig'
+import store from './redux/store';
+import BooksCountContainer from './redux/containers/BooksCountContainer';
+import BookWorm from './BookWorm';
+
 import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
@@ -16,10 +22,7 @@ import LoadingScreen from './screens/LoadingScreen';
 import BooksReadingScreen from './screens/HomeTabNavigator/BooksReadingScreen';
 import BooksReadScreen from './screens/HomeTabNavigator/BooksReadScreen';
 import CustomDrawerComponent from "./screens/DrawNavigator/CustomDrawComponent";
-import colors from "./assets/colors";
-import firebaseConfig from './config/firebaseConfig'
-import store from './redux/store';
-import BooksCountContainer from './redux/containers/BooksCountContainer';
+
 
 class App extends React.Component{
   componentDidMount() {
@@ -32,7 +35,7 @@ class App extends React.Component{
     return (
       <Provider store={store}>
         <ActionSheetProvider>
-          <AppContainer />
+          <BookWorm />
         </ActionSheetProvider>
       </Provider>
     )

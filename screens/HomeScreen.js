@@ -29,6 +29,8 @@ function HomeScreen(props) {
   const [textInputData, setTextInputData] = useState('');
   this.textInputRef = React.createRef();
   const books = useSelector(state => state.books.books);
+  const currentUserState = useSelector(state => state.auth.currentUser);
+
   const isLoadingBooks = useSelector(state => state.books.isLoadingBooks);
   const dispatch = useDispatch();
   const loadBooksIntoStore = books => dispatch({type: 'LOAD_BOOKS_FROM_SERVER', payload: books});
@@ -40,8 +42,7 @@ function HomeScreen(props) {
   const updateBookImage = book => dispatch({type: 'UPDATE_BOOK_IMAGE', payload: book})
 
   useEffect(() => {
-    const {navigation} = props;
-    const user = navigation.getParam('user');
+    const user = currentUserState
     loadBooks(user);
   },[])
 
@@ -273,7 +274,7 @@ function HomeScreen(props) {
         >
           {item.read && (
             <Ionicons
-              style={{maginRight: 5}}
+              style={{marginRight: 5}}
               name="md-checkmark"
               color={colors.logoColor}
               size={30} 

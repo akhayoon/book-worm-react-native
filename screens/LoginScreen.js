@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import * as firebase from 'firebase/app';
 import 'firebase/auth'
+import {connect} from 'react-redux';
 
 import colors from '../assets/colors';
 import CustomActionButton from '../components/CustomActionButton'
@@ -28,7 +29,7 @@ class LoginScreen extends React.Component {
           .auth()
           .signInWithEmailAndPassword(email, password)
         this.setState({ isLoading: false });
-        this.props.navigation.navigate('LoadingScreen');
+        this.props.signIn(response.user);
       } 
       catch (error) {
         this.setState({ isLoading: false });
@@ -129,7 +130,13 @@ class LoginScreen extends React.Component {
   }
 }
 
-export default LoginScreen;
+const mapDispatchToProps = dispatch => {
+  return {
+    signIn: user => dispatch({type: 'SIGN_IN', payload: user})
+  }
+} 
+
+export default connect(null, mapDispatchToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
   container: {

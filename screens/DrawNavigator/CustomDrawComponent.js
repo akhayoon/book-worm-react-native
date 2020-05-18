@@ -8,7 +8,7 @@ import {
 import colors from '../../assets/colors'
 import { ScrollView } from 'react-native-gesture-handler';
 import {Ionicons} from '@expo/vector-icons';
-import {DrawerItems} from 'react-navigation-drawer';
+import {DrawerItemList} from '@react-navigation/drawer';
 
 const CustomDrawerComponent = (props) => {
   return (
@@ -28,7 +28,7 @@ const CustomDrawerComponent = (props) => {
           Book Worm
         </Text>
       </View>
-      <DrawerItems {...props} />
+      <DrawerItemList {...props} />
     </ScrollView>
   );
 }
