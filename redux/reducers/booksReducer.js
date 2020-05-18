@@ -2,7 +2,8 @@ const initialState = {
   books: [],
   booksReading: [],
   booksRead: [],
-  isLoadingBooks: true
+  isLoadingBooks: true,
+  image: null
 };
 
 const books = (state = initialState, action) => {
@@ -56,6 +57,25 @@ const books = (state = initialState, action) => {
         return {
           ...state,
           isLoadingBooks: action.payload
+        }
+      case 'UPDATE_BOOK_IMAGE':
+        return {
+          ...state,
+          books: state.books.map(b => 
+            b.name === action.payload.name 
+              ? {...b, image: action.payload.uri} 
+              : b 
+          ),
+          booksReading: state.booksReading.map(b => 
+            b.name === action.payload.name 
+              ? {...b, image: action.payload.uri} 
+              : b 
+          ),
+          booksRead: state.booksRead.map(b => 
+            b.name === action.payload.name 
+              ? {...b, image: action.payload.uri} 
+              : b 
+          ),
         }
     default:
       return state;

@@ -937,6 +937,14 @@
   dependencies:
     "@types/hammerjs" "^2.0.36"
 
+"@expo/react-native-action-sheet@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@expo/react-native-action-sheet/-/react-native-action-sheet-2.1.0.tgz#7c3f6def52aee15ca7bd9e03cc0529e64618592c"
+  integrity sha512-gtFPQp36pLZxd29vTov+ewaJ7Bd3obP5XxaphwaKZRBVtHrbfd5DvdMBKs8//Y19pRseKrskdATou3b8EKk8Sg==
+  dependencies:
+    hoist-non-react-statics "^2.2.2"
+    prop-types "^15.5.10"
+
 "@expo/vector-icons@^10.0.2":
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.6.tgz#5718953ff0b97827d11dae5787976fa8ce5caaed"
@@ -3104,6 +3112,13 @@ expo-font@~8.0.0:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-image-picker@~8.0.1:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.0.2.tgz#14139f1d73793ae7fba6fe3cf34e1dc91baf402a"
+  integrity sha512-oa0/JoKIv5mxyadpVqiQ+BXak2s7QS3+Rurj1j/gL5GGFmb3cDJWbGHxvtrEXEccv8812JAp5BfBRqfzlW1gMQ==
+  dependencies:
+    expo-permissions "*"
+
 expo-keep-awake@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-8.0.0.tgz#f9200a876a5db86e3f0aec8843428a918cdc08d6"
@@ -3120,6 +3135,11 @@ expo-location@~8.0.0:
   integrity sha512-48i4dUCaqPTwSri79yummKwg6vE6loI7d4iHCrbG4EEuN3fhS8I9xU60CEkoNZTziH9zK0iw4KSjr7DbXUAaCw==
   dependencies:
     invariant "^2.2.4"
+
+expo-permissions@*:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-8.1.0.tgz#a7f2ee91ba76ce3a467e7b10adaa9ca5201b226f"
+  integrity sha512-QBHD+1J9+sGFnhoEGzMRchPweeEE0OJ9ehG/0l1BMRBA7qsLS9vRC1FTJ55NwjI0Kr4RTha9r6ZX1kZHT09f/w==
 
 expo-permissions@~8.0.0:
   version "8.0.0"
@@ -3804,7 +3824,7 @@ hermes-engine@^0.2.1:
   resolved "https://registry.yarnpkg.com/hermes-engine/-/hermes-engine-0.2.1.tgz#25c0f1ff852512a92cb5c5cc47cf967e1e722ea2"
   integrity sha512-eNHUQHuadDMJARpaqvlCZoK/Nitpj6oywq3vQ3wCwEsww5morX34mW5PmKWQTO7aU0ck0hgulxR+EVDlXygGxQ==
 
-hoist-non-react-statics@^2.3.1:
+hoist-non-react-statics@^2.2.2, hoist-non-react-statics@^2.3.1:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
   integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==

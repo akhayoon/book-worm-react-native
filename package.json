@@ -8,9 +8,12 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^2.1.0",
     "@react-native-community/masked-view": "^0.1.6",
     "@react-navigation/bottom-tabs": "^5.4.1",
     "expo": "^36.0.0",
+    "expo-image-picker": "~8.0.1",
+    "expo-permissions": "~8.0.0",
     "firebase": "^7.13.2",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.0",

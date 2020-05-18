@@ -10,17 +10,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as firebase from 'firebase/app';
+import 'firebase/storage';
+import 'firebase/database';
 import Swipeout from "react-native-swipeout";
 import * as Animatable from "react-native-animatable";
-require("firebase/database");
 import {useDispatch, useSelector} from 'react-redux';
-
+import {connectActionSheet} from '@expo/react-native-action-sheet';
 
 import CustomActionButton from "../components/CustomActionButton";
 import ListEmptyComponent from "../components/ListEmptyComponent";
 import ListItem from "../components/ListItem";
 import colors from '../assets/colors';
 import { snapshotToArray } from '../helpers/firebaseHelpers';
+import * as ImageHelper from '../helpers/imageHelper';
 
 function HomeScreen(props) {
   const [currentUser, setCurrentUser] = useState({});
@@ -35,6 +37,7 @@ function HomeScreen(props) {
   const addBookToStore = book => dispatch({type: 'ADD_BOOK', payload: book});
   const deleteBookInStore = book => dispatch({type: 'DELETE_BOOK', payload: book});
   const toggleIsLoadingBooks = bool => dispatch({type: 'TOGGLE_IS_LOADING_BOOKS', payload: bool});
+  const updateBookImage = book => dispatch({type: 'UPDATE_BOOK_IMAGE', payload: book})
 
   useEffect(() => {
     const {navigation} = props;
@@ -145,6 +148,79 @@ function HomeScreen(props) {
     }
   }
 
+  uploadImage = async(image, selectedBook) => {
+    try {
+      const ref = await firebase
+        .storage()
+        .ref('books')
+        .child(currentUser.uid)
+        .child(selectedBook.key);
+
+      // converting to blob
+      const blob = await ImageHelper.prepareBlob(image.uri);
+      const snapshot = await ref.put(blob);
+      const downloadURL = await ref.getDownloadURL();
+
+      await firebase
+        .database()
+        .ref('books')
+        .child(currentUser.uid)
+        .child(selectedBook.key)
+        .update({image: downloadURL});
+
+      blob.close();
+      return downloadURL;
+
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  openImageLirbary = async(selectedBook) => {
+    try {
+      const result = await ImageHelper.openImageLibary();
+      if (result) {
+        toggleIsLoadingBooks(true);
+        const downloadURL = await uploadImage(result, selectedBook);
+        updateBookImage({...selectedBook, uri: downloadURL});
+        toggleIsLoadingBooks(false);
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  openCamera = async(selectedBook) => {
+    try {
+      const result = await ImageHelper.openCamera();
+      if (result) {
+        toggleIsLoadingBooks(true);
+        const downloadURL = await uploadImage(result, selectedBook);
+        updateBookImage({...selectedBook, uri: downloadURL});
+        toggleIsLoadingBooks(false);
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  addBookImage = (selectedBook) => {
+    const options = ['Select from Photos', 'Camera', 'Cancel'];
+    const cancelButtonIndex = 2;
+
+    props.showActionSheetWithOptions({
+      options,
+      cancelButtonIndex
+    }, 
+    buttonIndex => {
+      if(buttonIndex === 0) {
+        openImageLirbary(selectedBook);
+      } else if(buttonIndex === 1) {
+        openCamera(selectedBook);
+      }
+    });
+  }
+
   renderItem = (item, index) => {
     const swipeoutButtons = [
       {
@@ -189,7 +265,12 @@ function HomeScreen(props) {
         right={swipeoutButtons}
         autoClose={true}
         >
-        <ListItem item={item} marginVertical={0}>
+        <ListItem 
+          onPress={() => addBookImage(item)}
+          item={item}
+          marginVertical={0}
+          editable={true}
+        >
           {item.read && (
             <Ionicons
               style={{maginRight: 5}}
@@ -255,7 +336,7 @@ function HomeScreen(props) {
   );
 }
 
-export default HomeScreen;
+export default connectActionSheet(HomeScreen);
 
 const styles = StyleSheet.create({
   container: {

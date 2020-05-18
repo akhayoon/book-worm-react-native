@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import * as firebase from 'firebase/app';
 import { Ionicons } from '@expo/vector-icons';
 import {Provider} from 'react-redux';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
 import WelcomeScreen from './screens/AppSwitchNavigator/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -30,7 +31,9 @@ class App extends React.Component{
   render() {
     return (
       <Provider store={store}>
-        <AppContainer />
+        <ActionSheetProvider>
+          <AppContainer />
+        </ActionSheetProvider>
       </Provider>
     )
   }

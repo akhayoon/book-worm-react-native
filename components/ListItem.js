@@ -3,30 +3,40 @@ import {
   View,
   Text,
   Image,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from "react-native";
 import colors from '../assets/colors'
 
-const ListItem = ({item, children, marginVertical}) => {
+const ListItem = ({ item, children, marginVertical, editable, onPress}) => {
   return (
     <View style={[styles.listItemContainer, marginVertical]}>
-      <View
-        style={styles.imageContainer}>
-        <Image source={require('../assets/icon.png')} style={styles.image} />
+      <View style={styles.imageContainer}>
+        <TouchableOpacity
+          disabled={!editable}
+          style={{ flex: 1 }} 
+          onPress={() => onPress(item)}
+        >
+        {item.image 
+          ? <Image source={{uri: item.image}} style={styles.image} />
+          : <Image source={require('../assets/icon.png')} style={styles.image} />
+        }
+        </TouchableOpacity>
       </View>
       <View
         style={styles.listItemTitleContainer}>
         <Text style={styles.listItemTitle}>{item.name}</Text>
       </View>
-        {children}
-      </View>
-    );
+      {children}
+    </View>
+  );
 }
 
 export default ListItem;
 
 ListItem.defaultProps = {
-  marginVertical: 5
+  marginVertical: 5,
+  editable: false
 }
 
 const styles = StyleSheet.create({
@@ -42,7 +52,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   image: {
-    flex: 1, 
+    flex: 1,
     height: null,
     width: null,
     borderRadius: 35
