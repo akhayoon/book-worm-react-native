@@ -46,7 +46,7 @@ const HomeTabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           switch (route.name) {
-            case 'Books':
+            case 'Home':
               return <BooksCountContainer color={color} type="books" />
             case 'BooksReading':
               return <BooksCountContainer color={color} type="booksReading" />
