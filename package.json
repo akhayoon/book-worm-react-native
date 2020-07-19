@@ -20,7 +20,7 @@
     "firebase": "^7.13.2",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.6.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "lottie-react-native": "^3.0.3",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
